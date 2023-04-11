@@ -21,6 +21,13 @@ struct CastList: View {
       ForEach(cast, id: \.uniqueId) { castMember in
         PersonCell(person: castMember)
       }
-    }
+		}
+		.task {
+			do {
+				cast = try await movieDataSource.fetchCastMembers(for: movie.id)
+			} catch {
+				cast = []
+			}
+		}
   }
 }
