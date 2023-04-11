@@ -19,11 +19,35 @@ class PopularMoviesViewModel: ObservableObject {
   }
   
   func fetchMovies() {
-    
+		currentPage = 1
+
+		Task {
+			do {
+				let movies = try await movieDataSource.fetchMovies(currentPage)
+				await MainActor.run {
+					self.movies = movies
+				}
+			}
+			catch {
+				print(error)
+			}
+		}
   }
   
   func fetchNextpage() {
-    
+    currentPage += 1
+
+		Task {
+			do {
+				let movies = try await movieDataSource.fetchMovies(currentPage)
+				await MainActor.run {
+					self.movies += movies
+				}
+			}
+			catch {
+				print(error)
+			}
+		}
   }
   
   private func fetchPage(_ page: Int) async throws -> [Movie] {

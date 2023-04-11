@@ -20,5 +20,12 @@ struct CrewList: View {
         PersonCell(person: crewMember)
       }
     }
+		.task {
+			do {
+				crew = try await movieDataSource.fetchCrewMembers(for: movie.id)
+			} catch {
+				crew = []
+			}
+		}
   }
 }
